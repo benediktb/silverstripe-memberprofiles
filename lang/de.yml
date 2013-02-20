@@ -62,6 +62,7 @@ de:
     MEMBERFIELD: 'Mitglieds-Feld'
     MEMBERWITHSAME: 'Es ist bereits ein Mitglied mit dem selben %s vorhanden.'
     NAME: 'Name'
+    NAMESMUSTBEDIFFERENT: 'Vor- und Nachname müssen unterschiedlich sein.'
     NEEDSVALIDATIONTOLOGIN: 'Sie müssen Ihre Anmeldung zuerst bestätigen, bevor Sie sich einloggen können.'
     NOLOGINTILLCONFIRMED: 'Das Konto wird erst aktiv nachdem es bestätigt wurde.'
     NONE: 'Keine'

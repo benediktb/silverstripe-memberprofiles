@@ -745,6 +745,17 @@ class MemberProfilePage_Controller extends Page_Controller {
 	 * @return Member|null
 	 */
 	protected function addMember($form) {
+		$firstName = mb_strtolower(trim($form->fields->fieldByName('FirstName')->Value()));
+		$lastName = mb_strtolower(trim($form->fields->fieldByName('Surname')->Value()));
+		
+		if ($firstName == $lastName) {
+			$form->sessionMessage(_t(
+				'MemberProfiles.NAMESMUSTBEDIFFERENT',
+				'First and last name must be different.'
+			), 'bad');
+			return;
+		}
+	
 		$member   = new Member();
 		$groupIds = $this->getSettableGroupIdsFrom($form);
 
