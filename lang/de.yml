@@ -51,6 +51,7 @@ de:
     MEMBERCHOICE: 'Erlaube dem Nutzer zu wählen'
     MEMBERFIELD: 'Nutzer Feld'
     MEMBERWITHSAME: 'Es ist bereist ein Mitglied mit dem selben %s vorhanden.'
+    NAMESMUSTBEDIFFERENT: 'Vor- und Nachname müssen unterschiedlich sein.'
     NEEDSVALIDATIONTOLOGIN: 'Sie müssen Ihre Anmeldung zuerst bestätigen, bevor Sie sich einloggen können.'
     NOLOGINTILLCONFIRMED: 'Der Login wird erst aktiv nachdem das Konto bestätigt wurde.'
     NONE: 'Keine'
