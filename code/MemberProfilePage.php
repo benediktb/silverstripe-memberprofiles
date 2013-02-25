@@ -26,6 +26,7 @@ class MemberProfilePage extends Page implements PermissionProvider {
 		'AllowAdding'              => 'Boolean',
 		'RegistrationRedirect'     => 'Boolean',
 		'RequireApproval'          => 'Boolean',
+		'CheckStopForumSpam'       => 'Boolean',
 		'EmailType'                => 'Enum("Validation, Confirmation, None", "None")',
 		'EmailFrom'                => 'Varchar(255)',
 		'EmailSubject'             => 'Varchar(255)',
@@ -243,6 +244,10 @@ class MemberProfilePage extends Page implements PermissionProvider {
 			new CheckboxField(
 				'AllowRegistration',
 				_t('MemberProfiles.ALLOWREG', 'Allow registration via this page')
+			),
+			new CheckboxField(
+				'CheckStopForumSpam',
+				_t('MemberProfiles.CHECKSTOPFORUMSPAM', 'Check "Stop Forum Spam" database during registration')
 			),
 			new CheckboxField(
 				'AllowProfileEditing',
@@ -732,21 +737,34 @@ class MemberProfilePage_Controller extends Page_Controller {
 	 * @return Member|null
 	 */
 	protected function addMember($form) {
-		$firstName = mb_strtolower(trim($form->fields->fieldByName('FirstName')->Value()));
-		$lastName = mb_strtolower(trim($form->fields->fieldByName('Surname')->Value()));
+		$member   = new Member();
+		$groupIds = $this->getSettableGroupIdsFrom($form);
+
+		$form->saveInto($member);
 		
-		if ($firstName == $lastName) {
+		if (mb_strtolower(trim($member->FirstName)) == mb_strtolower(trim($member->Surname))) {
 			$form->sessionMessage(_t(
 				'MemberProfiles.NAMESMUSTBEDIFFERENT',
 				'First and last name must be different.'
 			), 'bad');
 			return;
-		}
-	
-		$member   = new Member();
-		$groupIds = $this->getSettableGroupIdsFrom($form);
+		}	
 
-		$form->saveInto($member);
+		if ($this->CheckStopForumSpam) {
+			$sfs = new StopForumSpam();
+			$args = array('email' => $member->Email);
+			$client_ip = $_SERVER['REMOTE_ADDR'];
+			if ($client_ip != "127.0.0.1") {
+				$args["ip"] = $client_ip;
+			}
+			$is_spammer = $sfs->is_spammer($args, SFS_CONFIDENCE_THRESHOLD);
+			if ($is_spammer) {
+				$form->sessionMessage(_t('MemberProfiles.DETECTEDSPAMMER',
+					'Registration aborted: Your registration attempt was detected as spamming!'),
+					'bad');
+				return;
+			}
+		}
 
 		$member->ProfilePageID   = $this->ID;
 		$member->NeedsValidation = ($this->EmailType == 'Validation');

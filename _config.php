@@ -1,1 +1,3 @@
 <?php
+
+define('SFS_CONFIDENCE_THRESHOLD', 70);
