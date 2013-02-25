@@ -1,0 +1,3 @@
+[submodule "thirdparty/sfs-lib"]
+	path = thirdparty/sfs-lib
+	url = git://github.com/arminrosu/StopForumSpam-PHP-Lib.git
